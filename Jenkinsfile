@@ -1,115 +1,116 @@
-pipeline{
- agent any
+pipeline {
+    agent any
  environment {
-PATH ="/usr/share/maven:$PATH"
-}
-
-    parameters {
+        DOCKER_HUB_CREDENTIALS = credentials('97c36c51-b00f-4bd1-911b-3143b0f3b00d')
+    }
+    tools {
+        maven "Maven"
+    }
+parameters {
         choice(
             choices: ['Dev', 'Prod'],
             description: 'Select the environment',
             name: 'Environment'
         )
     }
-
-
-stages{
-
-     
-
-    // stage('Code checkout according to environment') {
-    // steps {
-    //     script{
-    //         if(params.Environment=='Dev'){
-    // checkout scmGit(branches: [[name: '*/Dev']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'Calculator']]]], userRemoteConfigs: [[credentialsId: 'newGitlabCred', url: 'https://git.nagarro.com/freshertraining2023/harshitaagrawal.git']])
-    //         }
-            
-    //         else if(params.Environment=='Prod'){
-    //             checkout scmGit(branches: [[name: '*/Prod']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'Calculator']]]], userRemoteConfigs: [[credentialsId: 'newGitlabCred', url: 'https://git.nagarro.com/freshertraining2023/harshitaagrawal.git']])
-    //         }
-
-    //         else{
-    //             error('Invalid choice')
-    //         }
-    //     } 
-    //     }
-    // }
-
-
-    stage("Maven Build"){
-        steps{
-            sh" mvn -f Calculator/pom.xml clean install"
+    //
+    stages {
+        stage("Maven Build") {
+            steps {
+                sh "mvn -f pom.xml clean install"
+            }
         }
-    }
-
-        stage("Unit Testing"){
-        steps{
-            sh "mvn -f Calculator/pom.xml test"
+        
+        stage('Test') {
+            steps {
+                sh "mvn test"
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
         }
-    }
-
-    stage("Artifactory_Upload"){
+    //     stage('SonarQube analysis') {
+    //     steps{
+    //         junit"Calculator/target/surfire-report/*.xml"
+    //         jococo()
+    //         withSonarQubeEnv('sonarqube-9.4') {
+    //             sh "mvn -f pom.xml clean install sonar:sonar"
+    //         }
+    //     }   
+    // }    
+        
+        stage('Sonar Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube-9.4') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+         stage("Pushing Artifacts"){
             steps{
                 rtUpload (
-                serverId: 'Artifactory',
+                serverId: 'arti',
                 spec: '''{
                 "files": [
                     {
-                    "pattern": "*.war",
-                    "target": "key/"
+                    "pattern": "*.jar",
+                    "target": "Main/"
                     }
                 ]
                 }''',
                 )
             }
-    } 
-    
-    
-    stage('SonarQube analysis') {
-        steps{
-            withSonarQubeEnv('server-sonar') {
-                sh "mvn -f Calculator/pom.xml clean install sonar:sonar"
+        }
+         stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image
+                    docker.build("aayushmalviya/calculator-app:${env.BUILD_ID}", "-f Dockerfile .")
+                }
             }
-        }   
-    }    
-
-
-
-    stage('Create image for Docker') {
-        steps {
-            sh 'docker build -t mydockerrepo ./Calculator/'
+        }
+       
+     
+         stage('Run the container') {
+    steps {
+        script {
+            def docker_container = sh(returnStdout: true, script: 'docker ps -a -f name="MiniAssignment" -q').trim()
+            
+            if (docker_container) {
+                sh "docker stop ${docker_container}"
+                sh "docker rm --force ${docker_container}"
+            }
+            
+            def port = params.Environment == 'Dev' ? '8084' : '8085'
+            sh "docker run -d --name MiniAssignment -p ${port}:8080 aayushmalviya/calculator-app:${env.BUILD_ID}"
         }
     }
-    
-   stage('Run the container'){
-        steps{
-            script{
-            def docker_container = sh(returnStdout: true, script: 'docker ps -a -f name="MavenAssessment2" -q')
-            if(docker_container)
-                {
-                    sh "docker stop ${docker_container}"
-                    sh "docker rm --force ${docker_container}"
-                }
-            if (params.Environment == 'Dev')
-            {
-                sh 'docker run -d --name MavenAssessment2 -p 8084:8080 mydockerrepo'
-            }
-            else
-            {
-                sh 'docker run -d --name MavenAssessment2 -p 8086:8080 mydockerrepo'
-            }
-            }
-        }
-   }
-
-
+}
+        stage('Email Notification') {
+    steps {
+        emailext body: 'Deployment completed successfully.',
+                 recipientProviders: [[$class: 'CulpritsRecipientProvider']],
+                 subject: 'Deployment Status',
+                 to: 'aayush.malviya@nagarro.com' // Replace with the recipient's email address
+    }
 }
 
-      post{
-        always{
-            mail to: "harshitaagrawal091@gmail.com",
-            subject: "Jenkins Job with Build #${BUILD_NUMBER}",
-            body: "Jenkins Job with Build #${BUILD_NUMBER}. Please go to ${BUILD_URL} and verify the build."
-        }
+//         stage('Push Docker Image') {
+//     steps {
+//         script {
+//             // Push the Docker image to Docker Hub
+//             docker.withRegistry('https://registry.hub.docker.com', '97c36c51-b00f-4bd1-911b-3143b0f3b00d') {
+//                 docker.image("aayushmalviya/calculator-app:${env.BUILD_ID}").push()
+//             }
+//         }
+//     }
+// }
+    
+
+
+        
+        
     }
 }
