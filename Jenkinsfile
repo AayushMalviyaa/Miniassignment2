@@ -1,9 +1,7 @@
 pipeline {
     agent any
 
-    tools {
-        maven "Maven"
-    }
+   environment {PATH ="/usr/local/sdkman/candidates/maven/current:$PATH"}
 parameters {
         choice(
             choices: ['Dev', 'Prod'],
