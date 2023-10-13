@@ -12,11 +12,13 @@ parameters {
         )
     }
     //
+  
     stages {
         stage("Maven Build") {
             steps {
-                sh "mvn -f pom.xml clean install"
-            }
+               def mvnHome = tool name: 'Maven', type: 'hudson.tasks.Maven$MavenInstallation'
+            sh "${mvnHome}/bin/mvn -f pom.xml clean install"
+            }   
         }
         
       
