@@ -17,23 +17,23 @@ stages{
 
      
 
-    stage('Code checkout according to environment') {
-    steps {
-        script{
-            if(params.Environment=='Dev'){
-    checkout scmGit(branches: [[name: '*/Dev']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'Calculator']]]], userRemoteConfigs: [[credentialsId: 'newGitlabCred', url: 'https://git.nagarro.com/freshertraining2023/harshitaagrawal.git']])
-            }
+    // stage('Code checkout according to environment') {
+    // steps {
+    //     script{
+    //         if(params.Environment=='Dev'){
+    // checkout scmGit(branches: [[name: '*/Dev']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'Calculator']]]], userRemoteConfigs: [[credentialsId: 'newGitlabCred', url: 'https://git.nagarro.com/freshertraining2023/harshitaagrawal.git']])
+    //         }
             
-            else if(params.Environment=='Prod'){
-                checkout scmGit(branches: [[name: '*/Prod']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'Calculator']]]], userRemoteConfigs: [[credentialsId: 'newGitlabCred', url: 'https://git.nagarro.com/freshertraining2023/harshitaagrawal.git']])
-            }
+    //         else if(params.Environment=='Prod'){
+    //             checkout scmGit(branches: [[name: '*/Prod']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'Calculator']]]], userRemoteConfigs: [[credentialsId: 'newGitlabCred', url: 'https://git.nagarro.com/freshertraining2023/harshitaagrawal.git']])
+    //         }
 
-            else{
-                error('Invalid choice')
-            }
-        } 
-        }
-    }
+    //         else{
+    //             error('Invalid choice')
+    //         }
+    //     } 
+    //     }
+    // }
 
 
     stage("Maven Build"){
