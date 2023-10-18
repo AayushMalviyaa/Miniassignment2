@@ -12,7 +12,7 @@ parameters {
         )
     }
     //   
-    stages {
+    
        
   stages {
          stage('Code checkout according to environment') {    
@@ -80,7 +80,7 @@ parameters {
 stage("Deploy to Tomcat") {
             steps {
                 script {
-                    def warFileInWorkspace = "/var/lib/jenkins/workspace/com.nagarro.Pipeline.MiniPipeline.AayushMalviya/target/ROOT.war"
+                    def warFileInWorkspace = "/var/lib/jenkins/workspace/com.nagarro.Pipeline.MiniPipeline.AayushMalviya/target/Calculator.war"
                     def tomcatUrl = params.Environment == 'Dev' ? "http://192.168.56.101:8081/" : "http://192.168.56.101:9090/"
 
  
