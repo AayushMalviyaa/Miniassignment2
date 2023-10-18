@@ -4,7 +4,7 @@
     <title>Calculator for Production</title>
 </head>
 <body style="text-align: center; background-color: #f0f0f0;">
-    <h1>Calculator for Development</h1>
+    <h1>Calculator for Production</h1>
     <form action="process" method="post" style="display: inline-block; padding: 20px; background-color: #fff; border: 1px solid #ccc; border-radius: 10px; width: 300px;">
         <input type="text" name="t1" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="Enter a number"><br>
         <input type="text" name="t2" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;" placeholder="Enter another number"><br>
