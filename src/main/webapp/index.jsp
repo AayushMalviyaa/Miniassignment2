@@ -26,27 +26,31 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        input[type="submit"] {
-            width: 100%;
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .calculator-button {
+            width: 48%;
             padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
         }
-        #addition {
+        .addition {
             background-color: #007BFF;
             color: #fff;
         }
-        #subtraction {
+        .subtraction {
             background-color: #28a745;
             color: #fff;
         }
-        #multiplication {
+        .multiplication {
             background-color: #dc3545;
             color: #fff;
         }
-        #division {
+        .division {
             background-color: #ffc107;
             color: #333;
         }
@@ -57,10 +61,14 @@
     <form action="process" method="post" class="calculator">
         <input type="text" name="t1" placeholder="Enter a number"><br>
         <input type="text" name="t2" placeholder="Enter another number"><br>
-        <input type="submit" name="action1" value="Addition" id="addition">
-        <input type="submit" name="action2" value="Subtraction" id="subtraction">
-        <input type="submit" name="action3" value="Multiplication" id="multiplication">
-        <input type="submit" name="action4" value="Division" id="division">
+        <div class="btn-container">
+            <input type="submit" name="action1" value="Addition" class="calculator-button addition">
+            <input type="submit" name="action2" value="Subtraction" class="calculator-button subtraction">
+        </div>
+        <div class="btn-container">
+            <input type="submit" name="action3" value="Multiplication" class="calculator-button multiplication">
+            <input type="submit" name="action4" value="Division" class="calculator-button division">
+        </div>
     </form>
 </body>
 </html>
