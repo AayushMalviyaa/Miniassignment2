@@ -7,14 +7,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #ECECEC;
+            background-color: #FFFFFF; /* White background */
             text-align: center;
             margin: 0;
             padding: 0;
         }
         .container {
-            background-color: #FFFFFF;
-            border: 2px solid #3498db;
+            background-color: #000000; /* Black background */
+            border: 2px solid #FFFFFF; /* White border */
             border-radius: 10px;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
             padding: 20px;
@@ -22,13 +22,13 @@
             max-width: 400px;
         }
         h1 {
-            color: #3498db;
+            color: #FFFFFF; /* White text */
             margin-bottom: 20px;
         }
         .result {
             font-size: 24px;
             margin-top: 20px;
-            color: #333;
+            color: #000000; /* Black text */
         }
     </style>
 </head>
