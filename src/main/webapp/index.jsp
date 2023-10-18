@@ -52,7 +52,7 @@
         }
         .division {
             background-color: #ffc107;
-            color: #333;
+            color: #333; 
         }
     </style>
 </head>
