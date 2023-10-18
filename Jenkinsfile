@@ -12,7 +12,7 @@ parameters {
         )
     }
     //   
-    stages {
+    
        
   stages {
          stage('Code checkout according to environment') {    
