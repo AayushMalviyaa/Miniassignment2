@@ -101,10 +101,10 @@ parameters {
             
             echo "Deploying $artifactPath to Tomcat at $tomcatUrl"
 
-            // Download the WAR file from JFrog Artifactory
+            
             sh "curl -u your_username:your_api_key -O ${artifactoryUrl}/artifactory/${repoKey}/${artifactPath}"
 
-            // Deploy the downloaded WAR file to Tomcat
+            
             sh "curl --upload-file ${artifactPath} '${tomcatUrl}/manager/text/deploy?path=/app&update=true' -u tomcat:password"
         }
     }
