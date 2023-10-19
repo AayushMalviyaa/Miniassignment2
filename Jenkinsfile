@@ -78,22 +78,18 @@ parameters {
             }
         }
 stage("Deploy to Tomcat") {
-    steps {
-        script {
-            def artifactoryUrl = "http://172.18.234.55:8083"
-            def repoKey = "General/Main"
-            def artifactPath = "Calculator.war"
-            def tomcatUrl = params.Environment == 'Dev' ? "http://192.168.56.101:8081" : "http://192.168.56.101:9090"
-            
-            echo "Deploying $artifactPath to Tomcat at $tomcatUrl"
+            steps {
+                script {
+                    def warFileInWorkspace = "/var/lib/jenkins/workspace/com.nagarro.Pipeline.MiniPipeline.AayushMalviya/target/Calculator.war"
+                    def tomcatUrl = params.Environment == 'Dev' ? "http://192.168.56.101:8081/" : "http://192.168.56.101:9090/"
 
-            
-            sh "curl -u your_username:your_api_key -O ${artifactoryUrl}/artifactory/${repoKey}/${artifactPath}"
+ 
 
-            
-            sh "curl --upload-file ${artifactPath} '${tomcatUrl}/manager/text/deploy?path=/app&update=true' -u tomcat:password"
-        }
-    }
+                    echo "Deploying $warFileInWorkspace to Tomcat at $tomcatUrl"
+
+                    sh "curl --upload-file ${warFileInWorkspace} '$tomcatUrl/manager/text/deploy?path=/app&update=true' -u tomcat:password"
+                }
+            }
 }
 
         stage('Email Notification') {
