@@ -5,7 +5,7 @@ pipeline {
         maven "maven.3.2.5"
     }
 parameters {
-        choice(
+        choice( 
             choices: ['Dev', 'Prod'],
             description: 'Select the environment',
             name: 'Environment'
